@@ -8,70 +8,64 @@ void main(List<String> args) {
   runApp(const App());
 }
 
-class App extends StatefulWidget {
+class App extends StatelessWidget {
   const App({super.key});
 
   @override
-  State<App> createState() => _AppState();
-}
-
-class _AppState extends State<App> {
-  @override
   Widget build(BuildContext context) {
+    var bg = Lottie.asset(
+      'assets/bg.json',
+      fit: BoxFit.cover,
+      width: double.infinity,
+      height: double.infinity,
+    );
+
+    var text = AnimatedTextKit(
+      totalRepeatCount: 1,
+      animatedTexts: [
+        TypewriterAnimatedText(
+          "Hi 👋🏼\nI'm Deniz",
+          textStyle:
+              GoogleFonts.vt323().copyWith(fontSize: 100, color: Colors.white),
+          speed: const Duration(milliseconds: 200),
+        ),
+      ],
+    );
+
+    var parallaxStack = ParallaxStack(
+      layers: [
+        bg,
+        ParallaxLayer(
+          yRotation: .01,
+          xRotation: .01,
+          dimensionalOffset: .0018,
+          child: bg,
+        ),
+        Container(
+          color: Colors.black.withOpacity(.45),
+          width: double.infinity,
+          height: double.infinity,
+        ),
+        ParallaxLayer(
+          yRotation: .1,
+          xRotation: .1,
+          enable3d: true,
+          dimensionalOffset: .007,
+          child: Center(
+            child: SizedBox(
+              height: 400,
+              width: 410,
+              child: text,
+            ),
+          ),
+        ),
+      ],
+    );
+
     return MaterialApp(
         title: "Deniz Salman",
-        theme: ThemeData(
-          textTheme: GoogleFonts.vt323TextTheme(),
-        ),
         home: Scaffold(
-            body: ParallaxStack(
-          layers: [
-            Lottie.asset(
-              'assets/bg.json',
-              fit: BoxFit.cover,
-              width: double.infinity,
-              height: double.infinity,
-            ),
-            ParallaxLayer(
-              yRotation: 0.01,
-              xRotation: 0.01,
-              dimensionalOffset: 0.0018,
-              child: Lottie.asset(
-                'assets/bg.json',
-                fit: BoxFit.cover,
-                width: double.infinity,
-                height: double.infinity,
-              ),
-            ),
-            Container(
-              color: Colors.black.withOpacity(0.45),
-              width: double.infinity,
-              height: double.infinity,
-            ),
-            ParallaxLayer(
-              yRotation: 0.1,
-              xRotation: 0.1,
-              enable3d: true,
-              dimensionalOffset: 0.007,
-              child: Center(
-                child: SizedBox(
-                  width: 500,
-                  height: 400,
-                  child: AnimatedTextKit(
-                    totalRepeatCount: 1,
-                    animatedTexts: [
-                      TypewriterAnimatedText(
-                        "Hi 👋🏼\nI'm Deniz",
-                        textStyle: GoogleFonts.vt323()
-                            .copyWith(fontSize: 100, color: Colors.white),
-                        speed: const Duration(milliseconds: 200),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        )));
+          body: parallaxStack,
+        ));
   }
 }
